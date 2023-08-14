@@ -23,8 +23,7 @@ class APIController extends Controller
                         return response()->json([
                                 'status' => true,
                                 'user' => base64_encode(json_encode($result))
-                        ])->header('Access-Control-Allow-Origin', '*')
-                            ->header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+                        ]);
                 }
                 return response()->json([
                         'status' => false
