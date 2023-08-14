@@ -55,12 +55,16 @@ class BillingController extends Controller
 
     public function getBillingPage(Request $request, $token){
         $user = json_decode(base64_decode($token), true);
-        Session::put('authenticated', true);
-        Session::put('user', $user);
-        return response()->json([
-            "user" => $user
-        ]);
+	    if($user){
+		Session::put('authenticated', true);
+		Session::put('user', $user);
+		return response()->json(['page' => $this->index()]);
+		// return redirect()->action("BillingController@index");
+	    } else {
+	    	return response()->json(['error' => 'User not found']);
+	    }
     }
+	
     public function index()
     {
         $billingDetails = $this->getAccountBillingDetails();
