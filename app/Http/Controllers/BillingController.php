@@ -34,6 +34,9 @@ use SonarSoftware\CustomerPortalFramework\Models\BankAccount;
 use SonarSoftware\CustomerPortalFramework\Models\CreditCard;
 use SonarSoftware\CustomerPortalFramework\Models\TokenizedCreditCard;
 use Stripe\Token;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
+
 
 class BillingController extends Controller
 {
@@ -49,6 +52,15 @@ class BillingController extends Controller
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
+
+    public function getBillingPage(Request $request, $token){
+        $user = json_decode(base64_decode($token), true);
+        Session::put('authenticated', true);
+        Session::put('user', $user);
+        return response()->json([
+            "user" => $user
+        ]);
+    }
     public function index()
     {
         $billingDetails = $this->getAccountBillingDetails();
