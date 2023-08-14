@@ -22,7 +22,7 @@ class APIController extends Controller
                 {
                         return response()->json([
                                 'status' => true,
-                                'user' => $result
+                                'user' => base64_encode(json_encode($result))
                         ]);
                 }
                 return response()->json([
