@@ -58,7 +58,8 @@ class BillingController extends Controller
 	    if($user){
 		Session::put('authenticated', true);
 		Session::put('user', $user);
-		return response()->json(['page' => $this->index()]);
+		return response()->json(['page' => $this->index()])->header('Access-Control-Allow-Origin', '*')
+    			->header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
 		// return redirect()->action("BillingController@index");
 	    } else {
 	    	return response()->json(['error' => 'User not found']);
