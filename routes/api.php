@@ -14,4 +14,5 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::post('login', 'API\APIController@loginAPI');
+Route::get('billing-page/{token}', 'BillingController@getBillingPage');
 
