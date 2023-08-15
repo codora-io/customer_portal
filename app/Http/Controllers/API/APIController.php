@@ -13,7 +13,6 @@ use SonarSoftware\CustomerPortalFramework\Helpers\HttpHelper;
 
 class APIController extends Controller
 {
-
         public function loginAPI(AuthenticationRequest $request)
         {
                 $httpHelper = new HttpHelper();
@@ -29,6 +28,4 @@ class APIController extends Controller
                         'status' => false
                 ]);
         }
-
 }
-t
