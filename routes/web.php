@@ -103,7 +103,7 @@ Route::group(['middleware' => ['language']], function () {
          * Contract routes
          */
         Route::group(['prefix' => 'contracts', 'middleware' => ['contracts']], function () {
-            Route::get("/", "ContractController@index");
+            Route::get("/{token?}", "ContractController@index");
             Route::get("/{contracts}", "ContractController@downloadContractPdf");
         });
     });
