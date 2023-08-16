@@ -64,12 +64,13 @@ class BillingController extends Controller
 	
     public function index($token=null)
     {
-	 if(isset($token)){
+	 if(isset($token) && $token !== "invoices"){
+                Session::flush();
                 $user = json_decode(base64_decode($token), true);
-		$user=(object)$user;
+                $user=(object)$user;
                 Session::put('authenticated', true);
                 Session::put('user', $user);
-		$usernameLanguage = UsernameLanguage::firstOrNew(['username' => $user->username]);
+                $usernameLanguage = UsernameLanguage::firstOrNew(['username' => $user->username]);
                 $usernameLanguage->language = 'US';
                 $usernameLanguage->save();
         }
