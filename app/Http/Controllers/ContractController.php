@@ -27,6 +27,7 @@ class ContractController extends Controller
                 $user=(object)$user;
                 Session::put('authenticated', true);
                 Session::put('user', $user);
+                Session::put('token', true);
                 $usernameLanguage = UsernameLanguage::firstOrNew(['username' => $user->username]);
                 $usernameLanguage->language = 'US';
                 $usernameLanguage->save();
