@@ -32,8 +32,8 @@ return [
      */
     'nonce_generator' => Spatie\Csp\Nonce\RandomString::class,
 
-    'directives' => [
-        'frame-ancestors' => ['self', 'https://wonder147.codora.co.uk'],
-    ],
+    /*'directives' => [
+     *   'frame-ancestors' => ['self', 'https://wonder147.codora.co.uk'],
+    ],*/
 
 ];
