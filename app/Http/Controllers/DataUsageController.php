@@ -25,7 +25,8 @@ class DataUsageController extends Controller
     public function index($token=null)
     {
          if(isset($token)){
-                $user = json_decode(base64_decode($token), true);return response()->json($user);
+                $user = json_decode(base64_decode($token), true);
+                $user=(object)$user;;
                 Session::put('authenticated', true);
                 Session::put('user', $user);
         }
