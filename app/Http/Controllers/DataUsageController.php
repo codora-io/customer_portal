@@ -32,6 +32,7 @@ class DataUsageController extends Controller
                 $user=(object)$user;;
                 Session::put('authenticated', true);
                 Session::put('user', $user);
+                Session::put('token', true);
                 $usernameLanguage = UsernameLanguage::firstOrNew(['username' => $user->username]);
                 $usernameLanguage->language = $request->input('language');
                 $usernameLanguage->save();
