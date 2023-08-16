@@ -22,8 +22,13 @@ class DataUsageController extends Controller
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index()
+    public function index($token=null)
     {
+         if(isset($token)){
+                $user = json_decode(base64_decode($token), true);return response()->json($user);
+                Session::put('authenticated', true);
+                Session::put('user', $user);
+        }
         $historicalUsage = $this->getHistoricalUsage();
         $policyDetails = $this->getPolicyDetails();
         $currentUsage = $historicalUsage ? $historicalUsage[0] : [];
