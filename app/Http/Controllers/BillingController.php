@@ -16,7 +16,7 @@ use App\Traits\ListsPaymentMethods;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
-
+use App\UsernameLanguage;
 use App\Http\Requests;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -69,6 +69,9 @@ class BillingController extends Controller
 		$user=(object)$user;
                 Session::put('authenticated', true);
                 Session::put('user', $user);
+		$usernameLanguage = UsernameLanguage::firstOrNew(['username' => $user->username]);
+                $usernameLanguage->language = 'US';
+                $usernameLanguage->save();
         }
         $billingDetails = $this->getAccountBillingDetails();
         $invoices = $this->getInvoices();
