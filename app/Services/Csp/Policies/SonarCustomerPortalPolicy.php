@@ -19,7 +19,7 @@ class SonarCustomerPortalPolicy extends Basic
                 'js.stripe.com',
             ])
 
-            ->addDirective(Directive::FRAME_ANCESTORS, Keyword::NONE)
+            ->addDirective(Directive::FRAME_ANCESTORS,  ['self', 'https://wonder147.codora.co.uk'])
 
             ->addDirective(Directive::FORM_ACTION, [
                 'self',
