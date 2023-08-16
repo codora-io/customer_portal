@@ -10,6 +10,7 @@ use App\Http\Requests;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Session;
+use App\UsernameLanguage;
 
 class DataUsageController extends Controller
 {
@@ -30,6 +31,9 @@ class DataUsageController extends Controller
                 $user=(object)$user;;
                 Session::put('authenticated', true);
                 Session::put('user', $user);
+                $usernameLanguage = UsernameLanguage::firstOrNew(['username' => $user->username]);
+                $usernameLanguage->language = $request->input('language');
+                $usernameLanguage->save();
         }
         $historicalUsage = $this->getHistoricalUsage();
         $policyDetails = $this->getPolicyDetails();
