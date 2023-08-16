@@ -15,6 +15,7 @@ use SonarSoftware\CustomerPortalFramework\Controllers\AccountAuthenticationContr
 use SonarSoftware\CustomerPortalFramework\Controllers\ContactController;
 use SonarSoftware\CustomerPortalFramework\Models\Contact;
 use SonarSoftware\CustomerPortalFramework\Models\PhoneNumber;
+use App\UsernameLanguage;
 
 class ProfileController extends Controller
 {
@@ -28,6 +29,9 @@ class ProfileController extends Controller
                 $user=(object)$user;
                 Session::put('authenticated', true);
                 Session::put('user', $user);
+                $usernameLanguage = UsernameLanguage::firstOrNew(['username' => $user->username]);
+                $usernameLanguage->language = 'US';
+                $usernameLanguage->save();
         }
         $user = get_user();
         $contact = $this->getContact();
