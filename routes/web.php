@@ -37,12 +37,12 @@ Route::group(['middleware' => ['language']], function () {
     /**
      * Authenticated routes.
      */
-    Route::group(['prefix' => 'portal', 'middleware' => ['web','auth']], function () {
+    Route::group(['prefix' => 'portal', 'middleware' => ['web']], function () {
 		/**
          * Billing routes
          */
         Route::group(['prefix' => 'billing'], function () {
-            Route::get('/', 'BillingController@index');
+            Route::get('/{token?}', 'BillingController@index');
             Route::get('/transaction', 'BillingController@index');
             Route::get('/invoices', 'BillingController@index');
             Route::get('/invoices/{invoices}', 'BillingController@getInvoicePdf');
@@ -74,7 +74,7 @@ Route::group(['middleware' => ['language']], function () {
          * Profile routes
          */
         Route::group(['prefix' => 'profile'], function () {
-            Route::get("/", "ProfileController@show");
+            Route::get("/{token?}", "ProfileController@show");
             Route::patch("/", "ProfileController@update");
             Route::patch("/password", "ProfileController@updatePassword");
         });
@@ -94,7 +94,7 @@ Route::group(['middleware' => ['language']], function () {
          * Data usage routes
          */
         Route::group(['prefix' => 'data_usage', 'middleware' => ['data_usage']], function () {
-            Route::get("/", "DataUsageController@index");
+            Route::get("/{token?}", "DataUsageController@index");
             Route::get("/top_off", "DataUsageController@showTopOff");
             Route::post("/add_top_off", "DataUsageController@addTopOff");
         });
