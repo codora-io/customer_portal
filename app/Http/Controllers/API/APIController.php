@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Session;
 use App\CreationToken;
-
+use Carbon\Carbon;
 
 class APIController extends Controller
 {
@@ -154,6 +154,28 @@ class APIController extends Controller
                     $m->to($result->email_address, $result->email_address)
                         ->subject(utrans("emails.createAccount", ['companyName' => config("customer_portal.company_name")],$request));
                 });
+                return response()->json(['status' => true]);
+        }
+
+        public function registerUser(Request $request)
+        {
+                $token = $request->token;
+                $email = base64_decode($request->email);
+                $password = $request->password;
+                $creationToken = CreationToken::where('token', '=', trim($token))
+                    ->where('updated_at', '>=', Carbon::now("UTC")->subHours(24)->toDateTimeString())
+                    ->first();
+                if ($creationToken === null) {
+                    return response()->json([
+                        'error' => 'Token Invalid'
+                    ]);
+                }
+                $httpHelper = new HttpHelper();
+                $httpHelper->patch("accounts/" . intval($creationToken->account_id) . "/contacts/" . intval($creationToken->contact_id),[
+                    'username' => $email,
+                    'password' => $password
+                ]);
+                $creationToken->delete();
                 return response()->json(['status' => true]);
         }
 }
