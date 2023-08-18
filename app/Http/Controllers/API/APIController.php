@@ -156,5 +156,4 @@ class APIController extends Controller
                 });
                 return response()->json(['status' => true]);
         }
-    }
 }
