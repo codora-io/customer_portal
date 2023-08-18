@@ -179,8 +179,9 @@ class APIController extends Controller
                 return response()->json(['status' => true]);
         }
 
-        public function resetPassword(Request $request)
-    {
+        public function resetPasswordEmail(Request $request)
+        {
+        $email = $request->email;
         $httpHelper = new HttpHelper();
         $result = $httpHelper->post("customer_portal/email_lookup", ['email_address' => trim($email), 'check_if_available' => (boolean)true]);
         $passwordReset = PasswordReset::where('account_id', '=', $result->account_id)
