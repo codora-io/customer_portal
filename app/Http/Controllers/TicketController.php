@@ -6,7 +6,8 @@ use App\Http\Requests\TicketReplyRequest;
 use App\Http\Requests\TicketRequest;
 use Exception;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Session;
+use App\UsernameLanguage;
 use App\Http\Requests;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
@@ -21,8 +22,19 @@ class TicketController extends Controller
      * Return ticket listing
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index()
+    public function index($token=null)
     {
+         if(isset($token) && $token !== "invoices"){
+                Session::flush();
+                $user = json_decode(base64_decode($token), true);
+                $user=(object)$user;
+                Session::put('authenticated', true);
+                Session::put('user', $user);
+                Session::put('token', true);
+                $usernameLanguage = UsernameLanguage::firstOrNew(['username' => $user->username]);
+                $usernameLanguage->language = 'US';
+                $usernameLanguage->save();
+        }
         $tickets = $this->getTickets();
         return view("pages.tickets.index", compact('tickets'));
     }
