@@ -119,5 +119,42 @@ class APIController extends Controller
 
         }
 
+        public function resendEmail(Request $request){
+                $email = $request->email;
+                $httpHelper = new HttpHelper();
+                $result = $httpHelper->post("customer_portal/email_lookup", ['email_address' => trim($email), 'check_if_available' => (boolean)true]);
+                $creationToken = CreationToken::where('account_id', '=', $result->account_id)
+                    ->where('contact_id', '=', $result->contact_id)
+                    ->first();
+
+                if ($creationToken === null) {
+                    $creationToken = new CreationToken([
+                        'token' => uniqid(),
+                        'email' => strtolower($result->email_address),
+                        'account_id' => $result->account_id,
+                        'contact_id' => $result->contact_id,
+                    ]);
+                } else {
+                    $creationToken->token = uniqid();
+                }
+
+                $creationToken->save();
+
+                $language = 'US';
+                Mail::send('emails.basic', [
+                    'greeting' => trans("emails.greeting",[],$language),
+                    'body' => trans("emails.accountCreateBody", [
+                        'isp_name' => config("app.name"),
+                        'portal_url' => config("app.url"),
+                        'creation_link' => config("app.url") . "/create/" . $creationToken->token,
+                    ],$language),
+                    'deleteIfNotYou' => trans("emails.deleteIfNotYou",[],$language),
+                ], function ($m) use ($result, $request) {
+                    $m->from(config("customer_portal.from_address"), config("customer_portal.from_name"));
+                    $m->to($result->email_address, $result->email_address)
+                        ->subject(utrans("emails.createAccount", ['companyName' => config("customer_portal.company_name")],$request));
+                });
+                return response()->json(['status' => true]);
+        }
     }
 }
