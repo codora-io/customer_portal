@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Session;
 use App\CreationToken;
 use Carbon\Carbon;
+use App\PasswordReset;
 
 class APIController extends Controller
 {
@@ -177,4 +178,43 @@ class APIController extends Controller
                 $creationToken->delete();
                 return response()->json(['status' => true]);
         }
+
+        public function resetPassword(Request $request)
+    {
+        $httpHelper = new HttpHelper();
+        $result = $httpHelper->post("customer_portal/email_lookup", ['email_address' => trim($email), 'check_if_available' => (boolean)true]);
+        $passwordReset = PasswordReset::where('account_id', '=', $result->account_id)
+            ->where('contact_id', '=', $result->contact_id)
+            ->first();
+        if ($passwordReset === null) {
+            $passwordReset = new PasswordReset([
+                'token' => uniqid(),
+                'email' => $result->email_address,
+                'contact_id' => $result->contact_id,
+                'account_id' => $result->account_id,
+            ]);
+        } else {
+            $passwordReset->token = uniqid();
+        }
+
+        $passwordReset->save();
+        $languageService = App::make(LanguageService::class);
+        $language = $languageService->getUserLanguage($request);
+        Mail::send('emails.basic', [
+            'greeting' => trans("emails.greeting",[],$language),
+            'body' => trans("emails.passwordResetBody", [
+                'isp_name' => config("app.name"),
+                'portal_url' => config("app.url"),
+                'reset_link' => config("app.url") . "/reset/" . $passwordReset->token,
+                'username' => $result->username,
+            ],$language),
+            'deleteIfNotYou' => trans("emails.deleteIfNotYou",[],$language),
+        ], function ($m) use ($result, $request) {
+            $m->from(config("customer_portal.from_address"), config("customer_portal.from_name"));
+            $m->to($result->email_address, $result->email_address);
+            $m->subject(utrans("emails.passwordReset", ['companyName' => config("customer_portal.company_name")],$request));
+        });
+        return response()->json('reset email has been sent!');
+    }
+
 }
