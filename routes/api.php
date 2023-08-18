@@ -18,4 +18,4 @@ Route::post('login', 'API\APIController@loginAPI');
 Route::post('register', 'API\APIController@registerAPI');
 Route::post('resendEmail', 'API\APIController@resendEmail');
 Route::post('registerUser', 'API\APIController@registerUser');
-Route::post('resetPassword', 'API\APIController@resetPasswordEmail');
+Route::post('resetPasswordRequest', 'API\APIController@resetPasswordEmail');
