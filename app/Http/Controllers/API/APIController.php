@@ -107,7 +107,7 @@ class APIController extends Controller
                     'body' => trans("emails.accountCreateBody", [
                         'isp_name' => config("app.name"),
                         'portal_url' => config("app.url"),
-                        'creation_link' => config("app.url") . "/create/" . $creationToken->token . "?email=" . base64_encode($email),
+                        'creation_link' => config("app.url") . "/create/" . $creationToken->token,
                     ],$language),
                     'deleteIfNotYou' => trans("emails.deleteIfNotYou",[],$language),
                 ], function ($m) use ($result, $request) {
@@ -160,7 +160,6 @@ class APIController extends Controller
         public function registerUser(Request $request)
         {
                 $token = $request->token;
-                $email = base64_decode($request->email);
                 $password = $request->password;
                 $creationToken = CreationToken::where('token', '=', trim($token))
                     ->where('updated_at', '>=', Carbon::now("UTC")->subHours(24)->toDateTimeString())
@@ -172,7 +171,7 @@ class APIController extends Controller
                 }
                 $httpHelper = new HttpHelper();
                 $httpHelper->patch("accounts/" . intval($creationToken->account_id) . "/contacts/" . intval($creationToken->contact_id),[
-                    'username' => $email,
+                    'username' => $creationToken->email,
                     'password' => $password
                 ]);
                 $creationToken->delete();
