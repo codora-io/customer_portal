@@ -18,6 +18,8 @@ use Illuminate\Support\Facades\Session;
 use App\CreationToken;
 use Carbon\Carbon;
 use App\PasswordReset;
+use App\Http\Requests\SendPasswordResetRequest;
+use App\Http\Requests\PasswordUpdateRequest;
 
 class APIController extends Controller
 {
@@ -216,6 +218,20 @@ class APIController extends Controller
             $m->subject(utrans("emails.passwordReset", ['companyName' => config("customer_portal.company_name")],$request));
         });
         return response()->json('reset email has been sent!');
-    }
+        }
+        public function updatePassword(Request $request, $token){
+                $passwordReset = PasswordReset::where('token', '=', trim($token))->where('updated_at', '>=', Carbon::now("UTC")->subHours(24)->toDateTimeString())->first();
+                $newPassword = $request->new_password;
+                $contactController = new ContactController();
+                $contact = $contactController->getContact($passwordReset->contact_id, $passwordReset->account_id);
+                $contactController->updateContactPassword($contact, $newPassword);
+                $passwordReset->delete();
+                
+                return response()->json([
+                    'status' => 'Password changed'
+                ]);
+        }
+
+        
 
 }
