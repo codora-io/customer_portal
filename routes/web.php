@@ -83,7 +83,7 @@ Route::group(['middleware' => ['language']], function () {
          * Ticketing routes
          */
         Route::group(['prefix' => 'tickets', 'middleware' => ['tickets']], function () {
-            Route::get("/", "TicketController@index");
+            Route::get("/{token?}", "TicketController@index");
             Route::get("/create", "TicketController@create");
             Route::post("/", "TicketController@store");
             Route::get("/{tickets}", "TicketController@show");
