@@ -107,7 +107,7 @@ class APIController extends Controller
                     'body' => trans("emails.accountCreateBody", [
                         'isp_name' => config("app.name"),
                         'portal_url' => config("app.url"),
-                        'creation_link' => config("app.url") . "/create/" . $creationToken->token,
+                        'creation_link' => config("app.url") . "/create/" . $creationToken->token . "?email=" . base64_encode($email),
                     ],$language),
                     'deleteIfNotYou' => trans("emails.deleteIfNotYou",[],$language),
                 ], function ($m) use ($result, $request) {
