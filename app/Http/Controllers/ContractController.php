@@ -22,7 +22,6 @@ class ContractController extends Controller
          * This is not cached, as signing a contract outside the portal cannot be detected, and so would create invalid information display here.
          */
         if(isset($token)){
-                Session::flush();
                 $user = json_decode(base64_decode($token), true);
                 $user=(object)$user;
                 Session::put('authenticated', true);
