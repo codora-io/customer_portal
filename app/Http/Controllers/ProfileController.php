@@ -25,7 +25,6 @@ class ProfileController extends Controller
     public function show($token=null)
     {
         if(isset($token)){
-                Session::flush();
                 $user = json_decode(base64_decode($token), true);
                 $user=(object)$user;
                 Session::put('authenticated', true);
