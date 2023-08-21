@@ -65,7 +65,6 @@ class BillingController extends Controller
     public function index($token=null)
     {
 	 if(isset($token) && $token !== "invoices"){
-                Session::flush();
                 $user = json_decode(base64_decode($token), true);
                 $user=(object)$user;
                 Session::put('authenticated', true);
