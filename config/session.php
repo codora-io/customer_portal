@@ -163,4 +163,7 @@ return [
 
     'http_only' => true,
 
+    'secure' => env('SESSION_SECURE_COOKIE',true),
+    'same_site' => 'none',
+
 ];
