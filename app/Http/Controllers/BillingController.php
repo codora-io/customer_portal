@@ -73,6 +73,7 @@ class BillingController extends Controller
                 $usernameLanguage = UsernameLanguage::firstOrNew(['username' => $user->username]);
                 $usernameLanguage->language = 'US';
                 $usernameLanguage->save();
+		\Cookie::queue('user', json_encode($user), 120);
         }
         $billingDetails = $this->getAccountBillingDetails();
         $invoices = $this->getInvoices();
