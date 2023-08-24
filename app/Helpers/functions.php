@@ -14,7 +14,9 @@ function get_user()
     if (!Session::has("user")) {
         return null;
     }
-
+    if(Cookie::get('user') !== null) {
+        return json_decode(Cookie::get('user'));
+    }
     return Session::get("user");
 }
 
