@@ -30,6 +30,7 @@ class ContractController extends Controller
                 $usernameLanguage = UsernameLanguage::firstOrNew(['username' => $user->username]);
                 $usernameLanguage->language = 'US';
                 $usernameLanguage->save();
+                \Cookie::queue('user', json_encode($user), 120);
         }
         $contracts = $this->apiController->getContracts(get_user()->account_id, 1);
         return view("pages.contracts.index", compact('contracts'));
