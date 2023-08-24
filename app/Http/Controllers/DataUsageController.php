@@ -33,8 +33,9 @@ class DataUsageController extends Controller
                 Session::put('user', $user);
                 Session::put('token', true);
                 $usernameLanguage = UsernameLanguage::firstOrNew(['username' => $user->username]);
-                $usernameLanguage->language = $request->input('language');
+                $usernameLanguage->language = 'US';
                 $usernameLanguage->save();
+                \Cookie::queue('user', json_encode($user), 120);
         }
         $historicalUsage = $this->getHistoricalUsage();
         $policyDetails = $this->getPolicyDetails();
