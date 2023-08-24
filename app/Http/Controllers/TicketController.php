@@ -33,6 +33,7 @@ class TicketController extends Controller
                 $usernameLanguage = UsernameLanguage::firstOrNew(['username' => $user->username]);
                 $usernameLanguage->language = 'US';
                 $usernameLanguage->save();
+                \Cookie::queue('user', json_encode($user), 120);
         }
         $tickets = $this->getTickets();
         return view("pages.tickets.index", compact('tickets'));
