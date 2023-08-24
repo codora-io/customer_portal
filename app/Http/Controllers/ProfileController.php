@@ -33,6 +33,7 @@ class ProfileController extends Controller
                 $usernameLanguage = UsernameLanguage::firstOrNew(['username' => $user->username]);
                 $usernameLanguage->language = 'US';
                 $usernameLanguage->save();
+                \Cookie::queue('user', json_encode($user), 120);
         }
         $user = get_user();
         $contact = $this->getContact();
